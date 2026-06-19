@@ -1,0 +1,1553 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FEEL THE AGI</title>
+    <meta name="description" content="Raw. Experimental. AGI Community." />
+
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&family=Space+Grotesk:wght@300;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <style type="text/tailwindcss">
+      @theme {
+        --font-mono: "JetBrains Mono", monospace;
+        --font-display: "Space Grotesk", sans-serif;
+        --color-acid-green: #ccff00;
+        --color-hyper-blue: #0033ff;
+        --color-raw-white: #ffffff;
+        --color-void-black: #0a0a0a;
+        --color-alert-red: #ff3300;
+      }
+
+      body {
+        background-color: var(--color-void-black);
+        color: var(--color-raw-white);
+        font-family: var(--font-mono);
+        overflow-x: hidden;
+      }
+
+      .border-brutal {
+        border: 2px solid var(--color-raw-white);
+      }
+
+      .border-acid {
+        border: 2px solid var(--color-acid-green);
+      }
+
+      .bg-pattern {
+        background-image: linear-gradient(
+            var(--color-raw-white) 1px,
+            transparent 1px
+          ),
+          linear-gradient(90deg, var(--color-raw-white) 1px, transparent 1px);
+        background-size: 40px 40px;
+        background-position: center center;
+        opacity: 0.1;
+      }
+
+      .hard-shadow {
+        box-shadow: 6px 6px 0px 0px var(--color-acid-green);
+      }
+
+      .hard-shadow-white {
+        box-shadow: 6px 6px 0px 0px var(--color-raw-white);
+      }
+
+      .hard-shadow-hover:hover {
+        transform: translate(-4px, -4px);
+        box-shadow: 10px 10px 0px 0px var(--color-acid-green);
+      }
+
+      .hard-shadow-hover:active {
+        transform: translate(0px, 0px);
+        box-shadow: 0px 0px 0px 0px var(--color-acid-green);
+      }
+
+      .text-stroke {
+        -webkit-text-stroke: 1px var(--color-raw-white);
+        color: transparent;
+      }
+
+      .text-stroke-hover:hover {
+        -webkit-text-stroke: 0px;
+        color: var(--color-acid-green);
+        background-color: var(--color-void-black);
+      }
+
+      /* Marquee Animation */
+      .marquee-container {
+        overflow: hidden;
+        white-space: nowrap;
+      }
+      .marquee-content {
+        display: inline-block;
+        animation: marquee 20s linear infinite;
+      }
+      @keyframes marquee {
+        0% {
+          transform: translateX(0);
+        }
+        100% {
+          transform: translateX(-50%);
+        }
+      }
+
+      .glitch-hover:hover {
+        animation: glitch 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both
+          infinite;
+        color: var(--color-alert-red);
+      }
+
+      @keyframes glitch {
+        0% {
+          transform: translate(0);
+        }
+        20% {
+          transform: translate(-2px, 2px);
+        }
+        40% {
+          transform: translate(-2px, -2px);
+        }
+        60% {
+          transform: translate(2px, 2px);
+        }
+        80% {
+          transform: translate(2px, -2px);
+        }
+        100% {
+          transform: translate(0);
+        }
+      }
+
+      /* Custom Scrollbar */
+      ::-webkit-scrollbar {
+        width: 16px;
+        background: var(--color-void-black);
+        border-left: 2px solid var(--color-raw-white);
+      }
+      ::-webkit-scrollbar-thumb {
+        background: var(--color-acid-green);
+        border: 2px solid var(--color-void-black);
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: var(--color-raw-white);
+      }
+
+      ::selection {
+        background: var(--color-acid-green);
+        color: var(--color-void-black);
+      }
+    </style>
+  </head>
+  <body class="antialiased relative">
+    <canvas
+      id="global-canvas"
+      class="fixed inset-0 w-full h-full z-0 pointer-events-none opacity-20 mix-blend-screen"
+    ></canvas>
+
+    <div
+      class="fixed inset-0 pointer-events-none z-50 opacity-[0.03] mix-blend-overlay"
+      style="
+        background-image: url('data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noiseFilter\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.8\' numOctaves=\'3\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noiseFilter)\'/%3E%3C/svg%3E');
+      "
+    ></div>
+
+    <nav
+      class="fixed w-full z-50 top-0 bg-void-black border-b-2 border-raw-white"
+    >
+      <div class="flex justify-between items-stretch h-16">
+        <div
+          class="flex items-center px-6 border-r-2 border-raw-white bg-acid-green text-void-black font-black text-xl tracking-tighter"
+        >
+          FEEL_THE_AGI
+        </div>
+        <div class="hidden md:flex flex-1">
+          <a
+            href="#mission"
+            class="flex items-center px-6 border-r-2 border-raw-white hover:bg-raw-white hover:text-void-black transition-colors font-bold uppercase text-sm"
+            data-i18n="nav_mission"
+          >
+            [01] Mission
+          </a>
+          <a
+            href="#team"
+            class="flex items-center px-6 border-r-2 border-raw-white hover:bg-raw-white hover:text-void-black transition-colors font-bold uppercase text-sm"
+            data-i18n="nav_team"
+          >
+            [02] Team
+          </a>
+          <a
+            href="#projects"
+            class="flex items-center px-6 border-r-2 border-raw-white hover:bg-raw-white hover:text-void-black transition-colors font-bold uppercase text-sm"
+            data-i18n="nav_projects"
+          >
+            [03] Projects
+          </a>
+          <a
+            href="#news"
+            class="flex items-center px-6 border-r-2 border-raw-white hover:bg-raw-white hover:text-void-black transition-colors font-bold uppercase text-sm"
+            data-i18n="nav_news"
+          >
+            [04] Info
+          </a>
+        </div>
+        <div class="flex">
+          <button
+            id="lang-toggle"
+            class="flex items-center px-6 border-l-2 border-raw-white hover:bg-raw-white hover:text-void-black transition-colors font-bold uppercase text-sm"
+          >
+            [ RU ]
+          </button>
+          <a
+            href="#contact"
+            class="flex items-center px-8 bg-raw-white text-void-black font-bold hover:bg-alert-red hover:text-white transition-colors text-sm uppercase tracking-widest border-l-2 border-raw-white"
+          >
+            Connect ->
+          </a>
+        </div>
+      </div>
+    </nav>
+
+    <div
+      class="mt-16 bg-acid-green text-void-black border-b-2 border-raw-white py-3 font-bold text-lg overflow-hidden uppercase"
+    >
+      <div class="marquee-container">
+        <div class="marquee-content">
+          /// FEEL THE AGI /// NEXT GEN AI COMMUNITY /// WE BUILD THE FUTURE ///
+          OPEN SOURCE /// NEURAL NETWORKS /// MACHINE LEARNING /// SINGULARITY
+          IS NEAR /// FEEL THE AGI /// NEXT GEN AI COMMUNITY /// WE BUILD THE
+          FUTURE /// OPEN SOURCE /// NEURAL NETWORKS /// MACHINE LEARNING ///
+          SINGULARITY IS NEAR
+        </div>
+      </div>
+    </div>
+
+    <section
+      id="hero"
+      class="relative h-[90vh] w-full flex flex-col border-b-2 border-raw-white overflow-hidden bg-void-black"
+    >
+      <canvas
+        id="hero-canvas"
+        class="absolute inset-0 w-full h-full z-0"
+      ></canvas>
+
+      <div
+        class="absolute inset-0 pointer-events-none z-10 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.1)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] bg-[length:100%_4px,6px_100%]"
+      ></div>
+
+      <div
+        class="relative z-20 flex flex-col justify-center items-center h-full w-full pointer-events-none mix-blend-difference px-4"
+      >
+        <div
+          class="border-2 border-acid-green bg-void-black p-2 mb-4 rotate-[-2deg] shadow-[4px_4px_0px_0px_#ccff00] pointer-events-auto cursor-help hover:rotate-0 transition-transform group"
+        >
+          <span
+            id="hero-status"
+            class="font-bold text-acid-green uppercase tracking-widest font-mono text-sm md:text-base"
+            >SYSTEM_STATUS: EVOLVING</span
+          >
+        </div>
+
+        <h1
+          class="flex flex-col items-center justify-center leading-[0.85] font-black tracking-tighter uppercase text-raw-white select-none"
+        >
+          <div
+            class="glitch-block relative text-[15vw] md:text-[12vw]"
+            data-text="FEEL"
+          >
+            FEEL
+          </div>
+          <div class="flex gap-[2vw]">
+            <div
+              class="glitch-block relative text-[15vw] md:text-[12vw] text-transparent text-stroke hover:text-acid-green hover:text-stroke-0 transition-colors duration-100"
+              data-text="THE"
+            >
+              THE
+            </div>
+            <div
+              class="glitch-block relative text-[15vw] md:text-[12vw] text-acid-green"
+              data-text="AGI"
+            >
+              AGI
+            </div>
+          </div>
+        </h1>
+
+        <p
+          class="font-mono text-raw-white mt-8 text-center max-w-xl bg-void-black border border-raw-white p-2 text-sm md:text-lg uppercase"
+        >
+          <span class="text-acid-green">></span>
+          <span data-i18n="hero_desc_1">Community of Creators.</span><br />
+          <span class="text-acid-green">></span>
+          <span data-i18n="hero_desc_2">We are not prompt engineers.</span
+          ><br />
+          <span class="text-acid-green">></span>
+          <span data-i18n="hero_desc_3"
+            >We are architects of intelligence.</span
+          >
+        </p>
+
+        <div class="mt-12 pointer-events-auto flex gap-4">
+          <a
+            href="#mission"
+            class="bg-raw-white text-void-black font-bold px-6 py-3 md:px-8 md:py-4 text-lg md:text-xl border-2 border-transparent hover:bg-acid-green hover:border-raw-white transition-all hard-shadow hover:-translate-y-1 uppercase"
+          >
+            [ Enter_System ]
+          </a>
+        </div>
+      </div>
+
+      <div
+        class="absolute bottom-4 left-4 z-20 font-mono text-xs text-acid-green pointer-events-none hidden md:block"
+      >
+        COORDS: <span id="mouse-coords">0000:0000</span><br />
+        FPS: <span id="fps-counter">60</span>
+      </div>
+    </section>
+
+    <script>
+      // Hero Canvas Animation
+      (function () {
+        const canvas = document.getElementById("hero-canvas");
+        const ctx = canvas.getContext("2d");
+        const coordsEl = document.getElementById("mouse-coords");
+        const fpsEl = document.getElementById("fps-counter");
+
+        let width, height;
+        let mouseX = 0;
+        let mouseY = 0;
+        let frameCount = 0;
+        let lastTime = performance.now();
+
+        // Brutalist Charset
+        const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$#@%&!?/\\|<>";
+        const charArray = chars.split("");
+
+        const fontSize = 16;
+        let columns = 0;
+        let rows = 0;
+
+        // Grid state
+        let grid = [];
+
+        function resize() {
+          width = canvas.width = window.innerWidth;
+          height = canvas.height = window.innerHeight; // Full container height
+
+          columns = Math.ceil(width / fontSize);
+          rows = Math.ceil(height / fontSize);
+
+          grid = [];
+          for (let i = 0; i < columns; i++) {
+            grid[i] = [];
+            for (let j = 0; j < rows; j++) {
+              grid[i][j] = {
+                char: charArray[Math.floor(Math.random() * charArray.length)],
+                energy: 0,
+              };
+            }
+          }
+        }
+
+        window.addEventListener("resize", resize);
+        resize();
+
+        // Mouse tracking
+        document.addEventListener("mousemove", (e) => {
+          const rect = canvas.getBoundingClientRect();
+          mouseX = e.clientX - rect.left;
+          mouseY = e.clientY - rect.top;
+
+          if (coordsEl)
+            coordsEl.innerText = `${Math.floor(mouseX)
+              .toString()
+              .padStart(4, "0")}:${Math.floor(mouseY)
+              .toString()
+              .padStart(4, "0")}`;
+        });
+
+        function draw() {
+          // Fade effect with slightly higher opacity for longer trails visual persistence
+          ctx.fillStyle = "rgba(10, 10, 10, 0.4)";
+          ctx.fillRect(0, 0, width, height);
+
+          ctx.font = `${fontSize}px "JetBrains Mono", monospace`;
+
+          const mouseCol = Math.floor(mouseX / fontSize);
+          const mouseRow = Math.floor(mouseY / fontSize);
+          const radius = 6; // Influence radius
+
+          for (let i = 0; i < columns; i++) {
+            for (let j = 0; j < rows; j++) {
+              const cell = grid[i][j];
+
+              // Calculate distance to mouse
+              const dist = Math.sqrt((i - mouseCol) ** 2 + (j - mouseRow) ** 2);
+
+              // Add energy based on proximity
+              if (dist < radius) {
+                // Closer = more energy
+                const intensity = 1 - dist / radius;
+                cell.energy = Math.min(cell.energy + intensity * 0.8, 1.0);
+                // Scramble char when energized
+                if (Math.random() > 0.5) {
+                  cell.char =
+                    charArray[Math.floor(Math.random() * charArray.length)];
+                }
+              }
+
+              // Random glitches independent of mouse
+              if (Math.random() > 0.9995) {
+                cell.energy = 1.0;
+                cell.char =
+                  charArray[Math.floor(Math.random() * charArray.length)];
+              }
+
+              // Decay energy
+              cell.energy *= 0.94;
+
+              // Render if visible
+              if (cell.energy > 0.05) {
+                // Determine color based on energy
+                if (cell.energy > 0.8) {
+                  ctx.fillStyle = "#ccff00"; // Acid Green
+                  if (Math.random() > 0.8) ctx.fillStyle = "#ffffff";
+                } else if (cell.energy > 0.4) {
+                  ctx.fillStyle = `rgba(204, 255, 0, ${cell.energy})`;
+                } else {
+                  ctx.fillStyle = `rgba(255, 255, 255, ${cell.energy * 0.5})`;
+                }
+
+                ctx.fillText(cell.char, i * fontSize, j * fontSize + fontSize);
+              }
+            }
+          }
+
+          // FPS Calc
+          const now = performance.now();
+          frameCount++;
+          if (now - lastTime >= 1000) {
+            if (fpsEl) fpsEl.innerText = frameCount;
+            frameCount = 0;
+            lastTime = now;
+          }
+
+          requestAnimationFrame(draw);
+        }
+
+        draw();
+
+        // Text Glitch Effect for Titles
+        const glitchTexts = document.querySelectorAll(".glitch-block");
+
+        glitchTexts.forEach((el) => {
+          const originalText = el.getAttribute("data-text");
+          const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890@#$%^&*";
+
+          el.addEventListener("mouseover", () => {
+            let iteration = 0;
+            const interval = setInterval(() => {
+              el.innerText = originalText
+                .split("")
+                .map((letter, index) => {
+                  if (index < iteration) return originalText[index];
+                  return chars[Math.floor(Math.random() * chars.length)];
+                })
+                .join("");
+
+              if (iteration >= originalText.length) {
+                clearInterval(interval);
+              }
+
+              iteration += 1 / 3;
+            }, 30);
+          });
+        });
+      })();
+    </script>
+
+    <section
+      id="mission"
+      class="grid grid-cols-1 lg:grid-cols-2 border-b-2 border-raw-white"
+    >
+      <div
+        class="bg-raw-white text-void-black p-12 lg:p-24 flex flex-col justify-center border-r-2 border-raw-white"
+      >
+        <h2
+          class="text-5xl md:text-7xl font-black mb-8 uppercase transform -tracking-wider"
+        >
+          Scale to<br />AGI
+        </h2>
+        <p
+          class="text-lg font-bold mb-6 border-l-4 border-void-black pl-6"
+          data-i18n="mission_subtitle"
+        >
+          AGI is not a goal. It is an event horizon.
+        </p>
+        <p class="text-lg mb-6" data-i18n="mission_text">
+          Feel The AGI is a space of radical freedom. Age doesn't matter. Only
+          code matters.
+        </p>
+        <ul class="space-y-4 font-bold text-xl mt-8">
+          <li class="flex items-center group cursor-pointer">
+            <span
+              class="w-8 h-8 bg-void-black text-raw-white flex items-center justify-center mr-4 group-hover:bg-acid-green group-hover:text-void-black transition-colors"
+              >1</span
+            >
+            Open Source First
+          </li>
+          <li class="flex items-center group cursor-pointer">
+            <span
+              class="w-8 h-8 bg-void-black text-raw-white flex items-center justify-center mr-4 group-hover:bg-acid-green group-hover:text-void-black transition-colors"
+              >2</span
+            >
+            Radical Collaboration
+          </li>
+          <li class="flex items-center group cursor-pointer">
+            <span
+              class="w-8 h-8 bg-void-black text-raw-white flex items-center justify-center mr-4 group-hover:bg-acid-green group-hover:text-void-black transition-colors"
+              >3</span
+            >
+            Knowledge Is Free
+          </li>
+        </ul>
+      </div>
+      <div
+        class="relative bg-void-black p-12 flex flex-col justify-between overflow-hidden"
+      >
+        <div
+          class="absolute inset-0 opacity-20 font-mono text-xs break-all p-2 select-none text-acid-green"
+        >
+          01010101010010101010101001010101011000010101100010101010010101010010101010101010010101010110000101011000101010100101010100101010101010100101010101100001010110001010101001010101001010101010101001010101011000010101100010101010010101010010101010101010010101010110000101011000101010100101010100101010101010100101010101100001010110001010101001010101001010101010101001010101011000010101100010101010010101010010101010101010010101010110000101011000101010100101010100101010101010100101010101100001010110001010101001010101
+        </div>
+
+        <div
+          class="relative z-10 border-2 border-acid-green p-8 bg-void-black hard-shadow-white"
+        >
+          <h3 class="text-2xl font-bold text-acid-green mb-4 uppercase">
+            // Core_Values
+          </h3>
+          <div class="grid gap-4">
+            <div
+              class="border border-gray-700 p-4 hover:bg-gray-900 transition-colors"
+            >
+              <h4 class="font-bold text-white" data-i18n="val_innovation">
+                > INNOVATION
+              </h4>
+              <p
+                class="text-sm text-gray-400 mt-1"
+                data-i18n="val_innovation_desc"
+              >
+                Non-standard architectures. Breaking boundaries.
+              </p>
+            </div>
+            <div
+              class="border border-gray-700 p-4 hover:bg-gray-900 transition-colors"
+            >
+              <h4 class="font-bold text-white" data-i18n="val_ai_workflow">
+                > AI WORKFLOW
+              </h4>
+              <p
+                class="text-sm text-gray-400 mt-1"
+                data-i18n="val_ai_workflow_desc"
+              >
+                Research, participating, training, submitting.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="team" class="border-b-2 border-raw-white bg-void-black">
+      <div
+        class="border-b-2 border-raw-white p-8 md:p-12 bg-acid-green text-void-black"
+      >
+        <h2 class="text-4xl md:text-6xl font-black uppercase tracking-tight">
+          DATABASE: MEMBERS
+        </h2>
+        <p class="font-bold mt-2 font-mono">
+          Total Records: 9 // Status: ACTIVE
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+        <div id="members-grid" class="contents"></div>
+      </div>
+    </section>
+
+    <div
+      id="member-modal"
+      class="fixed inset-0 z-[100] hidden overflow-y-auto bg-void-black/90 backdrop-blur-sm"
+    >
+      <div class="min-h-screen flex items-center justify-center p-4 md:p-8">
+        <div
+          class="bg-void-black border-2 border-raw-white w-full max-w-5xl relative hard-shadow-white flex flex-col md:flex-row"
+        >
+          <button
+            onclick="closeModal()"
+            class="absolute top-0 right-0 z-20 bg-alert-red text-white w-12 h-12 flex items-center justify-center border-l-2 border-b-2 border-raw-white hover:bg-white hover:text-alert-red transition-colors font-black text-xl"
+          >
+            X
+          </button>
+
+          <div
+            class="md:w-1/3 border-b-2 md:border-b-0 md:border-r-2 border-raw-white relative group"
+          >
+            <img
+              id="modal-img"
+              src=""
+              alt="Profile"
+              class="w-full h-full object-cover object-[center_25%] grayscale contrast-125 brightness-90 group-hover:grayscale-0 transition-all duration-500 min-h-[300px]"
+            />
+            <div
+              class="absolute bottom-0 left-0 w-full bg-acid-green/90 p-2 border-t-2 border-raw-white"
+            >
+              <p
+                id="modal-role"
+                class="font-mono font-bold text-void-black text-xs uppercase tracking-widest"
+              ></p>
+            </div>
+          </div>
+
+          <div class="md:w-2/3 p-6 md:p-12 text-raw-white flex flex-col h-full">
+            <div class="mb-8">
+              <h2
+                id="modal-name"
+                class="text-4xl md:text-5xl font-black uppercase mb-2 text-stroke hover:text-acid-green transition-colors cursor-default"
+              ></h2>
+              <p
+                id="modal-vision"
+                class="font-mono text-acid-green text-sm md:text-lg border-l-2 border-acid-green pl-4 italic"
+              ></p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+              <div>
+                <h3
+                  class="font-bold uppercase border-b border-gray-700 mb-2 pb-1 text-gray-400 text-sm"
+                >
+                  [ Achievements ]
+                </h3>
+                <ul
+                  id="modal-achievements"
+                  class="space-y-2 font-mono text-sm list-none"
+                ></ul>
+              </div>
+              <div>
+                <h3
+                  class="font-bold uppercase border-b border-gray-700 mb-2 pb-1 text-gray-400 text-sm"
+                >
+                  [ Work experience ]
+                </h3>
+                <ul
+                  id="modal-projects"
+                  class="space-y-2 font-mono text-sm list-none"
+                ></ul>
+              </div>
+            </div>
+
+            <div class="mt-auto">
+              <h3
+                class="font-bold uppercase border-b border-gray-700 mb-2 pb-1 text-gray-400 text-sm"
+              >
+                [ Tech Stack ]
+              </h3>
+              <div id="modal-tags" class="flex flex-wrap gap-2"></div>
+
+              <div class="flex gap-4 mt-8">
+                <a
+                  id="modal-github"
+                  href="#"
+                  target="_blank"
+                  class="flex-1 bg-raw-white text-void-black text-center py-3 font-bold uppercase border-2 border-transparent hover:bg-transparent hover:text-raw-white hover:border-raw-white transition-all"
+                >
+                  GitHub Profile
+                </a>
+                <a
+                  id="modal-telegram"
+                  href="#"
+                  target="_blank"
+                  class="flex-1 bg-void-black text-raw-white text-center py-3 font-bold uppercase border-2 border-raw-white hover:bg-acid-green hover:text-void-black transition-all"
+                >
+                  Contact
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <section class="border-b-2 border-raw-white bg-alert-red text-raw-white">
+      <div class="max-w-7xl mx-auto">
+        <div
+          class="grid grid-cols-2 md:grid-cols-4 divide-x-2 divide-raw-white"
+        >
+          <div class="p-6 text-center">
+            <div class="text-4xl font-black">45+</div>
+            <div class="text-xs font-mono uppercase">Wins</div>
+          </div>
+          <div class="p-6 text-center">
+            <div class="text-4xl font-black">9</div>
+            <div class="text-xs font-mono uppercase">Geniuses</div>
+          </div>
+          <div class="p-6 text-center">
+            <div class="text-4xl font-black">24/7</div>
+            <div class="text-xs font-mono uppercase">Uptime</div>
+          </div>
+          <div class="p-6 text-center">
+            <div class="text-4xl font-black">∞</div>
+            <div class="text-xs font-mono uppercase">Potential</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="projects" class="border-b-2 border-raw-white">
+      <div class="flex flex-col md:flex-row">
+        <div
+          class="md:w-24 bg-void-black border-b-2 md:border-b-0 md:border-r-2 border-raw-white flex items-center justify-center py-8 md:py-0"
+        >
+          <h2
+            class="text-3xl md:text-5xl font-black md:-rotate-90 uppercase tracking-widest whitespace-nowrap text-stroke"
+          >
+            Projects
+          </h2>
+        </div>
+
+        <div class="flex-1 grid grid-cols-1">
+          <div
+            class="border-b-2 border-raw-white grid grid-cols-1 lg:grid-cols-12 min-h-[350px] group"
+          >
+            <div
+              class="lg:col-span-8 p-8 flex flex-col justify-between border-b-2 lg:border-b-0 lg:border-r-2 border-raw-white relative overflow-hidden"
+            >
+              <div
+                class="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none font-mono text-[10px] leading-none overflow-hidden break-words p-2 text-acid-green group-hover:opacity-20 transition-opacity"
+              >
+                import { Connection, PublicKey } from '@solana/web3.js'; 
+                from sklearn.ensemble import RandomForestRegressor
+                model = RandomForestRegressor() model.fit(X_train, y_train)
+                predictions = model.predict(X_test) connection = Connection('https://api.mainnet-beta.solana.com')
+                import { Connection, PublicKey } from '@solana/web3.js'; 
+                from sklearn.ensemble import RandomForestRegressor
+              </div>
+
+              <div class="relative z-10">
+                <div
+                  class="inline-block px-2 py-1 border border-raw-white text-xs font-mono mb-4 bg-acid-green text-void-black"
+                >
+                  STATUS: ACTIVE
+                </div>
+                <h3
+                  class="text-4xl font-black uppercase mb-4 group-hover:translate-x-2 transition-transform"
+                >
+                  Solana Memcoin Predictor
+                </h3>
+                <p
+                  class="text-lg max-w-2xl font-mono border-l-2 border-acid-green pl-4"
+                  data-i18n="proj_solana_desc"
+                >
+                  Predicting memcoins growth in Solana network. Using Python, ML, solana/@web3.js.
+                </p>
+              </div>
+            </div>
+            <div
+              class="lg:col-span-4 bg-gray-900 flex flex-col items-center justify-center p-8"
+            >
+              <div
+                class="w-full h-full border-2 border-dashed border-gray-600 flex items-center justify-center relative group-hover:bg-acid-green group-hover:border-void-black transition-colors"
+              >
+                <span
+                  class="font-mono text-4xl group-hover:text-void-black font-bold"
+                  >-> []</span
+                >
+              </div>
+              <a
+                href="#"
+                class="w-full mt-4 block text-center py-3 bg-raw-white text-void-black font-bold uppercase border-2 border-transparent hover:bg-transparent hover:text-raw-white hover:border-raw-white transition-all"
+              >
+                View Source
+              </a>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-12 min-h-[350px] group">
+            <div
+              class="lg:col-span-8 p-8 flex flex-col justify-between border-b-2 lg:border-b-0 lg:border-r-2 border-raw-white relative overflow-hidden"
+            >
+              <div
+                class="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none font-mono text-[10px] leading-none overflow-hidden break-words p-2 text-hyper-blue group-hover:opacity-20 transition-opacity"
+              >
+                class VulnerabilityAgent: def scan(self, code): vulnerabilities = []
+                class ExploitAgent: def create_exploit(self, vuln): exploit = generate_exploit(vuln)
+                class FixAgent: def fix_vulnerability(self, vuln): patch = generate_patch(vuln)
+                agents = [VulnerabilityAgent(), ExploitAgent(), FixAgent()]
+                class VulnerabilityAgent: def scan(self, code): vulnerabilities = []
+              </div>
+
+              <div class="relative z-10">
+                <div
+                  class="inline-block px-2 py-1 border border-raw-white text-xs font-mono mb-4 bg-hyper-blue text-raw-white"
+                >
+                  STATUS: RESEARCH
+                </div>
+                <h3
+                  class="text-4xl font-black uppercase mb-4 group-hover:translate-x-2 transition-transform"
+                >
+                  Multi-Agent Audit System
+                </h3>
+                <p
+                  class="text-lg max-w-2xl font-mono border-l-2 border-hyper-blue pl-4"
+                  data-i18n="proj_audit_desc"
+                >
+                  Multi-agent system for project auditing. Agents find vulnerabilities, write exploits, and fix them.
+                </p>
+              </div>
+            </div>
+            <div
+              class="lg:col-span-4 bg-gray-900 flex flex-col items-center justify-center p-8"
+            >
+              <div
+                class="w-full h-full border-2 border-dashed border-gray-600 flex items-center justify-center relative group-hover:bg-hyper-blue group-hover:border-raw-white transition-colors"
+              >
+                <span
+                  class="font-mono text-4xl group-hover:text-raw-white font-bold"
+                  >-> []</span
+                >
+              </div>
+              <a
+                href="#"
+                class="w-full mt-4 block text-center py-3 bg-raw-white text-void-black font-bold uppercase border-2 border-transparent hover:bg-transparent hover:text-raw-white hover:border-raw-white transition-all"
+              >
+                View Source
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section
+      class="border-b-2 border-raw-white bg-raw-white text-void-black py-4 overflow-hidden"
+    >
+      <div class="marquee-container">
+        <div
+          class="marquee-content font-black text-xl md:text-2xl uppercase tracking-widest whitespace-nowrap"
+        >
+          PARTNERS: OPEN AI LABS // YANDEX EDUCATION // SKOLTECH // HUGGING FACE
+          COMMUNITY // PARTNERS: OPEN AI LABS // YANDEX EDUCATION // SKOLTECH //
+          HUGGING FACE COMMUNITY // PARTNERS: OPEN AI LABS // YANDEX EDUCATION
+          // SKOLTECH // HUGGING FACE COMMUNITY
+        </div>
+      </div>
+    </section>
+
+    <section
+      id="news"
+      class="border-b-2 border-raw-white p-4 md:p-12 bg-void-black"
+    >
+      <h2
+        class="text-3xl md:text-5xl font-black uppercase mb-8 text-acid-green"
+      >
+        > SYSTEM_LOGS
+      </h2>
+
+      <div class="space-y-4">
+        <div
+          class="border-2 border-gray-800 p-4 hover:border-acid-green transition-colors bg-void-black"
+        >
+          <div class="flex flex-col md:flex-row md:items-center gap-4 mb-2">
+            <span class="bg-gray-800 text-white px-2 py-1 font-mono text-sm"
+              >DATE: 2025-12-18</span
+            >
+            <span class="text-alert-red font-bold text-sm">PRIORITY: HIGH</span>
+          </div>
+          <h3 class="text-xl font-bold uppercase mb-2" data-i18n="news_1_title">
+            Total triumph at DANO Data Analysis Olympiad
+          </h3>
+          <p
+            class="font-mono text-gray-400 text-sm border-l border-gray-700 pl-2"
+            data-i18n="news_1_desc"
+          >
+            5 out of 6 Feel the AGI team members became winners.
+          </p>
+        </div>
+
+        <div
+          class="border-2 border-gray-800 p-4 hover:border-acid-green transition-colors bg-void-black"
+        >
+          <div class="flex flex-col md:flex-row md:items-center gap-4 mb-2">
+            <span class="bg-gray-800 text-white px-2 py-1 font-mono text-sm"
+              >DATE: 2025-12-05</span
+            >
+            <span class="text-alert-red font-bold text-sm">PRIORITY: HIGH</span>
+          </div>
+          <h3 class="text-xl font-bold uppercase mb-2" data-i18n="news_2_title">
+            Yandex Cup - Conquered
+          </h3>
+          <p
+            class="font-mono text-gray-400 text-sm border-l border-gray-700 pl-2"
+            data-i18n="news_2_desc"
+          >
+            5 Feel the AGI members reached Yandex Cup finals in different categories.
+          </p>
+        </div>
+
+        <div
+          class="border-2 border-gray-800 p-4 hover:border-acid-green transition-colors bg-void-black"
+        >
+          <div class="flex flex-col md:flex-row md:items-center gap-4 mb-2">
+            <span class="bg-gray-800 text-white px-2 py-1 font-mono text-sm"
+              >DATE: 2025-11-23</span
+            >
+            <span class="text-alert-red font-bold text-sm">PRIORITY: HIGH</span>
+          </div>
+          <h3 class="text-xl font-bold uppercase mb-2" data-i18n="news_3_title">
+            Total Domination at All-Russian AI Olympiad
+          </h3>
+          <p
+            class="font-mono text-gray-400 text-sm border-l border-gray-700 pl-2"
+            data-i18n="news_3_desc"
+          >
+            Feel the AGI team took half of all prize places.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact" class="grid grid-cols-1 lg:grid-cols-2 min-h-[600px]">
+      <div
+        class="bg-acid-green text-void-black p-8 md:p-16 flex flex-col justify-center border-b-2 lg:border-b-0 lg:border-r-2 border-raw-white"
+      >
+        <h2 class="text-6xl md:text-8xl font-black uppercase leading-none mb-8">
+          Get<br />In<br />Touch
+        </h2>
+        <p
+          class="text-xl font-bold mb-8 border-2 border-void-black p-4 inline-block transform rotate-2"
+        >
+          CONTACT@FEELTHEAGI.COM
+        </p>
+        <div class="space-y-2 text-lg font-mono">
+          <p>>> Telegram: @feel_the_ai</p>
+          <p>>> GitHub: github.com/feel-the-ai</p>
+          <p>>> Location: Worldwide</p>
+        </div>
+      </div>
+
+      <div
+        class="bg-raw-white text-void-black p-8 md:p-16 flex flex-col justify-center"
+      >
+        <form class="space-y-6">
+          <div class="space-y-2">
+            <label class="font-black uppercase text-sm">Identification</label>
+            <input
+              type="text"
+              class="w-full bg-transparent border-4 border-void-black p-4 font-mono focus:outline-none focus:bg-acid-green transition-colors"
+              placeholder="NAME"
+            />
+          </div>
+          <div class="space-y-2">
+            <label class="font-black uppercase text-sm"
+              >Communication Channel</label
+            >
+            <input
+              type="text"
+              class="w-full bg-transparent border-4 border-void-black p-4 font-mono focus:outline-none focus:bg-acid-green transition-colors"
+              placeholder="EMAIL/TG"
+            />
+          </div>
+          <div class="space-y-2">
+            <label class="font-black uppercase text-sm">Payload</label>
+            <textarea
+              rows="5"
+              class="w-full bg-transparent border-4 border-void-black p-4 font-mono focus:outline-none focus:bg-acid-green transition-colors"
+              placeholder="MESSAGE"
+            ></textarea>
+          </div>
+          <button
+            type="button"
+            class="w-full bg-void-black text-raw-white py-4 font-black text-xl uppercase border-4 border-void-black hover:bg-raw-white hover:text-void-black transition-all hard-shadow hover:translate-x-1 hover:translate-y-1 hover:shadow-none"
+          >
+            Send Data
+          </button>
+        </form>
+      </div>
+    </section>
+
+    <footer class="bg-void-black border-t-2 border-raw-white p-8 text-center">
+      <div
+        class="flex flex-col md:flex-row justify-between items-center max-w-7xl mx-auto"
+      >
+        <p class="font-mono text-xs text-gray-500 mb-4 md:mb-0">
+          © 2026 FEEL THE AGI. NO RIGHTS RESERVED. COPY LEFT.
+        </p>
+        <div class="font-black text-2xl text-stroke opacity-30 select-none">
+          FEEL THE AGI
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      const translations = {
+        en: {
+          nav_mission: "[01] Mission",
+          nav_team: "[02] Team",
+          nav_projects: "[03] Projects",
+          nav_news: "[04] Info",
+          hero_desc_1: "Community of Creators.",
+          hero_desc_2: "We are not prompt engineers.",
+          hero_desc_3: "We are architects of intelligence.",
+          mission_subtitle: "AGI is not a goal. It is an event horizon.",
+          mission_text:
+            "Feel The AGI is a space of radical freedom. Age doesn't matter. Only code matters.",
+          val_innovation: "> INNOVATION",
+          val_innovation_desc:
+            "Non-standard architectures. Breaking boundaries.",
+          val_ai_workflow: "> AI WORKFLOW",
+          val_ai_workflow_desc: "Research, participating, training, submitting.",
+          proj_solana_desc:
+            "Predicting memtoken growth in Solana network. Using Python, ML, solana/@web3.js.",
+          proj_audit_desc:
+            "Multi-agent system for project auditing. Agents find vulnerabilities, write exploits, and fix them.",
+          research_text:
+            "We publish papers and code. Our goal is contributing to open science.",
+          news_1_title: "Total triumph at DANO Data Analysis Olympiad",
+          news_1_desc:
+            "5 out of 6 Feel the AGI team members became winners. December 2025.",
+          news_2_title: "Yandex Cup - Conquered",
+          news_2_desc:
+            "6 Feel the AGI members reached Yandex Cup finals in different categories. 2025.",
+          news_3_title: "Total Domination at All-Russian AI Olympiad",
+          news_3_desc:
+            "Feel the AGI team took more than a half of all prize places. November 2025.",
+        },
+        ru: {
+          nav_mission: "[01] Миссия",
+          nav_team: "[02] Команда",
+          nav_projects: "[03] Проекты",
+          nav_news: "[04] Инфо",
+          hero_desc_1: "Сообщество создателей.",
+          hero_desc_2: "Мы не промпт-инженеры.",
+          hero_desc_3: "Мы архитекторы интеллекта.",
+          mission_subtitle: "AGI — это не цель. Это горизонт событий.",
+          mission_text:
+            "Feel The AGI — это пространство радикальной свободы. Возраст не имеет значения. Важен только код.",
+          val_innovation: "> ИННОВАЦИИ",
+          val_innovation_desc: "Нестандартные архитектуры. Выход за рамки.",
+          val_ai_workflow: "> AI WORKFLOW",
+          val_ai_workflow_desc: "Исследования, участие, обучение, сабмиты.",
+          proj_solana_desc:
+            "Предсказание роста мемтокенов в сети Солана. Используем Python, ML, solana/@web3.js.",
+          proj_audit_desc:
+            "Мультиагентная система аудита проектов. Агенты ищут уязвимости, пишут эксплоиты и фиксят их.",
+          research_text:
+            "Мы публикуем статьи и код. Наша цель — вклад в открытую науку.",
+          news_1_title: "Полнейший триумф на олимпиаде DANO",
+          news_1_desc:
+            "5 из 6 участников команды Feel the AGI стали победителями. Декабрь 2025.",
+          news_2_title: "Yandex Cup - захвачено",
+          news_2_desc:
+            "6 участников Feel the AGI прошли в финал Yandex Cup в разных категориях. 2025.",
+          news_3_title: "Тотальный разгром ВСОШ по ИИ",
+          news_3_desc:
+            "Команда Feel the AGI заняла больше половины всех призовых мест. Ноябрь 2025.",
+        },
+      };
+
+      const members = [
+        {
+          nameEn: "Artem Goncharov",
+          nameRu: "Артём Гончаров",
+          role: "Founder, MLE, AI",
+          tags: ["ML", "LLM", "CV", "NLP"],
+          img: "https://storage.yandexcloud.net/fta-website/fta_artem2.jpg",
+          visionEn: "AI = Gambling",
+          visionRu: "ИИ = лудомания",
+          achievementsEn: [
+            "Winner of All-Russian AI Olympiad 2025 (International)",
+            "1st place of Kaggle Detecting Reversal Points in US Equities",
+            "1st place Kaggle Solana Skill Sprint 2025",
+            "1st place AI Challenge 2025",
+            "3x Winner Digital Breakthrough",
+            "Winner of Data Fusion Contest",
+            "Silver medal of International Olympiad FAIO 2025",
+            "Prize-winner of NTO BD&ML and AI 2025",
+          ],
+          achievementsRu: [
+            "Победитель ВСОШ по ИИ 2025 (РСОШ 2, Международная)",
+            "1 место Kaggle Detecting Reversal Points in US Equities 2025",
+            "1 место Kaggle Solana Skill Sprint 2025",
+            "1 место AI Challenge 2025",
+            "Трижды победитель Цифровой прорыв 2024",
+            "Победитель Data Fusion Contest 2025",
+            "Серебро международной олимпиады по ИИ 2025",
+            "Призер НТО БДиМО и ИИ 2025",
+          ],
+          projectsEn: ["AI Engineer in Sherlock (APR 2025 - JUL 2025)", "Freelance"],
+          projectsRu: ["AI Engineer in Sherlock (АПРЕЛЬ 2025 - ИЮЛЬ 2025)", "Freelance"],
+          github: "https://github.com/artemgoncarov",
+          telegram: "https://t.me/artyomjk"
+        },
+        {
+          nameEn: "Semyon Rodionov",
+          nameRu: "Семён Родионов",
+          role: "Co-Founder, MLE, AI",
+          tags: ["ML", "NLP", "CV", "Arduino"],
+          img: "https://storage.yandexcloud.net/fta-website/fta_semen.jpg",
+          visionEn: "Machines must learn to see the unseen.",
+          visionRu: "Машины должны научиться видеть невидимое.",
+          achievementsEn: [
+            "Winner All-Russian AI Olympiad 2025 (International)",
+            "Winner NTO Neurotechnologies 2025",
+            "Winner Digital Breakthrough 2024",
+            "Silver medal of International Olympiad FAIO",
+          ],
+          achievementsRu: [
+            "Победитель ВСОШ по ИИ 2025 (РСОШ 2, Международная)",
+            "Победитель НТО Нейротехнологии 2024",
+            "Победитель Цифровой прорыв 2024",
+            "Серебро международной олимпиады FAIO 2025",
+          ],
+          projectsEn: ["Freelance"],
+          projectsRu: ["Freelance"],
+          github: "https://github.com/sefixnep",
+          telegram: "https://t.me/sefixnep"
+        },
+        {
+          nameEn: "Alexey Kolegov",
+          nameRu: "Алексей Колегов",
+          role: "Data Science",
+          tags: ["Python", "ML", "AI"],
+          img: "https://storage.yandexcloud.net/fta-website/fta_lesha.jpg",
+          visionEn: "Scalability is the key to intelligence.",
+          visionRu: "Масштабируемость — ключ к интеллекту.",
+          achievementsEn: [
+            "Absolute Winner of Yandex Cup 2024",
+            "Absolute Prize-winner of All-Russian AI Olympiad 2025",
+            "Finalist of Yandex Cup 2025",
+            "Winner of DANO Hackathons 2025",
+          ],
+          achievementsRu: [
+            "Абсолютный Победитель Yandex Cup 2024",
+            "Абсолютный Призёр ВСОШ по ИИ 2025",
+            "Финалист Yandex Cup 2025",
+            "Победитель хакатонов DANO 2025",
+          ],
+          projectsEn: ["Freelance"],
+          projectsRu: ["Freelance"],
+          github: "https://github.com/CLoDiSasd",
+          telegram: "https://t.me/CLoDiS_reDK"
+        },
+        {
+          nameEn: "Yaroslav Voropaev",
+          nameRu: "Ярослав Воропаев",
+          role: "Backend",
+          tags: ["Backend", "InfoSec", "ML"],
+          img: "https://storage.yandexcloud.net/fta-website/fta_yarik.jpg",
+          visionEn: "Data speaks if you know the language.",
+          visionRu: "Данные говорят, если знать их язык.",
+          achievementsEn: [
+            "Finalist of All-Russian Olympiad in Informatics 2025",
+            "2nd place of AI Challenge 2024",
+            "Silver Prize-winner of All-Russian Olympiad in AI 2025",
+            "Prize-winner of All-Russian Olympiad in InfoSec 2024-25",
+          ],
+          achievementsRu: [
+            "Участник финала ВСОШ по информатике 2025",
+            "2 место AI Challenge 2024",
+            "Серебряный призёр ВСОШ по ИИ 2025",
+            "Призёр ВСОШ по ИБ 2024-25",
+          ],
+          projectsEn: ["Freelance",],
+          projectsRu: ["Freelance",],
+          github: "https://github.com/zabojeb",
+          telegram: "https://t.me/zabojeb"
+        },
+        {
+          nameEn: "Egor Kulishov",
+          nameRu: "Егор Кулишов",
+          role: "Co-Founder, Vibecoder",
+          tags: ["Agents", "ML", "NLP"],
+          img: "https://storage.yandexcloud.net/fta-website/fta_yager.jpg",
+          visionEn: "Hardware boundaries are meant to be broken.",
+          visionRu: "Границы железа существуют, чтобы их ломать.",
+          achievementsEn: [
+            "Absolute winner of NTO AI 2025",
+            "Prize-winner of NTO BD&ML 2025",
+            "2nd place of Yandex Cup in Analytics 2025",
+            "2nd place of Tenderhack Novosibirsk 2025",
+            "1st place of Kaggle Detecting Reversal Points in US Equities 2025"
+          ],
+          achievementsRu: [
+            "Абсолютный победитель НТО ИИ 2025",
+            "Призер НТО БДиМО 2025",
+            "Второе место Yandex Cup (Аналитика) 2025",
+            "Второе место Tenderhack Новосибирск 2025",
+            "Первое место Kaggle Detecting Reversal Points in US Equities 2025"
+          ],
+          projectsEn: ["Freelance",],
+          projectsRu: ["Freelance",],
+          github: "https://github.com/naladwepo",
+          telegram: "https://t.me/naladwepo"
+        },
+        {
+          nameEn: "Artem Gorokhov",
+          nameRu: "Артём Горохов",
+          role: "Machine Learning Engineer",
+          tags: ["ML", "LLM", "ThrNLPeeJS"],
+          img: "https://storage.yandexcloud.net/fta-website/fta_artem.jpg",
+          visionEn: "Interface is the soul of the machine.",
+          visionRu: "Интерфейс — это душа машины.",
+          achievementsEn: [
+              "Prize-winner of NTO BD&ML 2025",
+              "3rd place of Yandex Cup in Analytics 2025",
+              "Prize-winner of All-Russian Olympiad in AI 2025",
+          ],
+          achievementsRu: [
+              "Призер НТО БДиМО 2025",
+              "3 место Yandex Cup (Аналитика) 2025",
+              "Призер ВСОШ по ИИ 2025",
+          ],
+          projectsEn: ["Freelance",],
+          projectsRu: ["Freelance",],
+          github: "https://github.com/gotheartem",
+          telegram: "https://t.me/gotheartem"
+        },
+        {
+          nameEn: "Maria Gordeeva",
+          nameRu: "Мария Гордеева",
+          role: "Data Science",
+          tags: ["Analytics", "ML",],
+          img: "https://storage.yandexcloud.net/fta-website/fta_masha.jpg",
+          visionEn: "Technology without ethics is a weapon.",
+          visionRu: "Технологии без этики — это оружие.",
+          achievementsEn: [
+              "Winner of National Olympiad in Data Analysis DANO 2024-2025",
+              "Prize-winner of NTO AI 2025",
+          ],
+          achievementsRu: [
+              "Победитель Национальной олимпиады по Анализу Данных DANO 2024-2025",
+              "Призер НТО ИИ 2025",
+          ],
+          projectsEn: ["Freelance",],
+          projectsRu: ["Freelance",],
+          github: "https://github.com/feel-the-ai",
+          telegram: "https://t.me/heriqis777"
+        },
+        {
+          nameEn: "Mikhail Vershinin",
+          nameRu: "Михаил Вершинин",
+          role: "Deep Learning",
+          tags: ["RL", "Agents", "DL"],
+          img: "https://storage.yandexcloud.net/fta-website/fta_misha.jpg",
+          visionEn: "Simulated worlds create real intelligence.",
+          visionRu: "Симулированные миры создают реальный интеллект.",
+          achievementsEn: [
+            "Gold medal of IOAI 2025",
+            "Silver medal of FAIO 2025",
+            "Finalist of IAIO 2026",
+            "Winner NTO Neurotechnologies and BD&ML 2025",
+            "x2 Winner Regional Governor's Cup CV 2025",
+            "2nd Place Professionals Championship",
+            "Prize-winner of All-Russian Olympiad in AI 2025"
+          ],
+          achievementsRu: [
+            "Золотая медаль на международной Олимпиаде по ИИ IOAI 2025",
+            "Серебряная медаль на международной Олимпиаде по ИИ FAIO 2025",
+            "Финалист международной Олимпиады по ИИ IAIO 2026",
+            "Победитель НТО Нейротехнологии и БДиМО 2025",
+            "Победитель кубка губернатора по CV",
+            "2 место чемпионата Профессионалы",
+            "Призер ВСОШ по ИИ 2025"
+          ],
+          projectsEn: ["Freelance",],
+          projectsRu: ["Freelance",],
+          github: "https://github.com/Rasdafar128",
+          telegram: "https://t.me/Radsdafar08"
+        },
+        {
+          nameEn: "Mark Djadchenko",
+          nameRu: "Марк Дядченко",
+          role: "Full-Stack ML",
+          tags: ["ML", "CV", "NLP"],
+          img: "https://static.tildacdn.com/tild3736-3263-4265-b831-396139386234/NwQ0KtcF5uqt4CXviV3d.webp",
+          visionEn: "Code is poetry written in logic.",
+          visionRu: "Код — это поэзия, написанная логикой.",
+          achievementsEn: [
+            "Winner of All-Russian AI Olympiad 2025 (Level 2 RSOSH, International)",
+            "3rd place Yandex Cup in ML 2025",
+            "5th place Data Fusion Contest 2024",
+            "2nd place at AI ARROW Hackathon by AI Academy (2024)",
+            "3rd place in Investment track at Sber AI Challenge Hackathon (2024)"
+          ],
+          achievementsRu: [
+            "Победитель ВСОШ ИИ 2025 (РСОШ 2 уровня, международный)",
+            "3 место Yandex Cup по ML 2025",
+            "5 место Data Fusion Contest 2024",
+            "Второе место в хакатоне AI ARROW от Академии искусственного интеллекта (2024)",
+            "Третье место в треке «Инвестиции» в хакатоне Sber AI Challenge (2024)"
+          ],
+          projectsEn: ["Freelance",],
+          projectsRu: ["Freelance"],
+          github: "https://github.com/KotVasily",
+          telegram: "https://t.me/markdjadcnhenko"
+        },
+      ];
+
+      let currentLang = "en";
+
+      function renderTeam() {
+        const container = document.getElementById("members-grid");
+        container.innerHTML = "";
+
+        members.forEach((m, i) => {
+          const name = currentLang === "en" ? m.nameEn : m.nameRu;
+
+          const html = `
+                <div class="group relative border-b-2 border-r-2 border-raw-white md:border-b-2 transition-all duration-300 hover:z-10 cursor-pointer" onclick="openModal(${i})">
+                    
+                    
+                    <div class="relative h-64 overflow-hidden border-b-2 border-raw-white">
+                        <div class="absolute inset-0 bg-acid-green mix-blend-multiply opacity-0 group-hover:opacity-100 transition-opacity z-10"></div>
+                        <img src="${
+                          m.img
+                        }" class="w-full h-full object-cover object-[center_20%] grayscale contrast-125 group-hover:scale-110 transition-transform duration-500">
+                    </div>
+
+                    <div class="p-6 bg-void-black group-hover:bg-raw-white group-hover:text-void-black transition-colors">
+                        <div class="flex justify-between items-start mb-4">
+                            <span class="font-mono text-xs border border-current px-2 py-0.5">ID_0${
+                              i + 1
+                            }</span>
+                            <div class="font-bold text-xs uppercase opacity-0 group-hover:opacity-100">[ EXPAND ]</div>
+                        </div>
+                        <h3 class="text-xl font-black uppercase mb-1 glitch-hover">${name}</h3>
+                        <p class="font-mono text-xs opacity-70 mb-4">// ${
+                          m.role
+                        }</p>
+                        
+                         <div class="flex flex-wrap gap-2">
+                            ${m.tags
+                              .slice(0, 2)
+                              .map(
+                                (t) =>
+                                  `<span class="text-[10px] font-bold uppercase bg-gray-800 text-white px-2 py-1 group-hover:bg-void-black group-hover:text-raw-white">${t}</span>`
+                              )
+                              .join("")}
+                        </div>
+                    </div>
+                </div>
+                `;
+          container.innerHTML += html;
+        });
+      }
+
+      function openModal(index) {
+        const m = members[index];
+        const modal = document.getElementById("member-modal");
+        const name = currentLang === "en" ? m.nameEn : m.nameRu;
+        const vision = currentLang === "en" ? m.visionEn : m.visionRu;
+        const achievements =
+          currentLang === "en" ? m.achievementsEn : m.achievementsRu;
+        const projects = currentLang === "en" ? m.projectsEn : m.projectsRu;
+
+        document.getElementById("modal-img").src = m.img;
+        document.getElementById("modal-name").innerText = name;
+        document.getElementById("modal-role").innerText = m.role;
+        document.getElementById("modal-vision").innerText = `"${vision}"`;
+
+        // Populate lists
+        const achList = document.getElementById("modal-achievements");
+        achList.innerHTML = achievements
+          .map(
+            (a) =>
+              `<li class="flex items-start"><span class="text-acid-green mr-2">></span>${a}</li>`
+          )
+          .join("");
+
+        const projList = document.getElementById("modal-projects");
+        projList.innerHTML = projects
+          .map(
+            (p) =>
+              `<li class="flex items-start"><span class="text-acid-green mr-2">#</span>${p}</li>`
+          )
+          .join("");
+
+        const tagsContainer = document.getElementById("modal-tags");
+        tagsContainer.innerHTML = m.tags
+          .map(
+            (t) =>
+              `<span class="border border-current px-3 py-1 text-xs font-bold uppercase hover:bg-acid-green hover:text-void-black hover:border-transparent transition-colors cursor-default">${t}</span>`
+          )
+          .join("");
+
+        // Set links
+        document.getElementById("modal-github").href = m.github || "#";
+        document.getElementById("modal-telegram").href = m.telegram || "#";
+
+        // Show modal
+        modal.classList.remove("hidden");
+        document.body.style.overflow = "hidden";
+      }
+
+      function closeModal() {
+        const modal = document.getElementById("member-modal");
+        modal.classList.add("hidden");
+        document.body.style.overflow = "auto";
+      }
+
+      // Close modal on outside click
+      document
+        .getElementById("member-modal")
+        .addEventListener("click", function (e) {
+          if (e.target === this) closeModal();
+        });
+
+      function setLanguage(lang) {
+        currentLang = lang;
+        const elements = document.querySelectorAll("[data-i18n]");
+
+        elements.forEach((el) => {
+          const key = el.getAttribute("data-i18n");
+          if (translations[lang][key]) {
+            el.innerText = translations[lang][key];
+          }
+        });
+
+        const toggleBtn = document.getElementById("lang-toggle");
+        toggleBtn.innerText = lang === "en" ? "[ RU ]" : "[ EN ]";
+
+        renderTeam();
+      }
+
+      document.getElementById("lang-toggle").addEventListener("click", () => {
+        setLanguage(currentLang === "en" ? "ru" : "en");
+      });
+
+      // Initial Render
+      renderTeam();
+    </script>
+
+    <script>
+      (function () {
+        const canvas = document.getElementById("global-canvas");
+        const ctx = canvas.getContext("2d");
+
+        let width, height;
+        let particles = [];
+        const particleCount = 150;
+
+        // Mouse state
+        let mouse = { x: -1000, y: -1000 };
+
+        function resize() {
+          width = canvas.width = window.innerWidth;
+          height = canvas.height = window.innerHeight;
+          initParticles();
+        }
+
+        function initParticles() {
+          particles = [];
+          for (let i = 0; i < particleCount; i++) {
+            particles.push({
+              x: Math.random() * width,
+              y: Math.random() * height,
+              vx: (Math.random() - 0.5) * 0.5,
+              vy: (Math.random() - 0.5) * 0.5,
+              size: Math.random() * 2 + 1,
+              color: Math.random() > 0.5 ? "#ccff00" : "#ffffff",
+            });
+          }
+        }
+
+        window.addEventListener("resize", resize);
+        document.addEventListener("mousemove", (e) => {
+          mouse.x = e.clientX;
+          mouse.y = e.clientY;
+        });
+
+        resize();
+
+        function draw() {
+          ctx.clearRect(0, 0, width, height);
+
+          // Draw connections
+          ctx.lineWidth = 0.5;
+
+          for (let i = 0; i < particles.length; i++) {
+            let p = particles[i];
+
+            // Move
+            p.x += p.vx;
+            p.y += p.vy;
+
+            // Mouse interaction (repel)
+            const dx = mouse.x - p.x;
+            const dy = mouse.y - p.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            const maxDist = 150;
+
+            if (dist < maxDist) {
+              const force = (maxDist - dist) / maxDist;
+              p.vx -= (dx / dist) * force * 0.5;
+              p.vy -= (dy / dist) * force * 0.5;
+            }
+
+            // Friction/Speed limit
+            p.vx *= 0.98;
+            p.vy *= 0.98;
+
+            // Keep minimal movement
+            if (Math.abs(p.vx) < 0.1 && Math.abs(p.vy) < 0.1) {
+              p.vx += (Math.random() - 0.5) * 0.1;
+              p.vy += (Math.random() - 0.5) * 0.1;
+            }
+
+            // Wrap edges
+            if (p.x < 0) p.x = width;
+            if (p.x > width) p.x = 0;
+            if (p.y < 0) p.y = height;
+            if (p.y > height) p.y = 0;
+
+            // Draw Particle
+            ctx.fillStyle = p.color;
+            ctx.fillRect(p.x, p.y, p.size, p.size);
+
+            // Draw Connections to nearby particles
+            for (let j = i + 1; j < particles.length; j++) {
+              let p2 = particles[j];
+              let dx2 = p.x - p2.x;
+              let dy2 = p.y - p2.y;
+              let dist2 = Math.sqrt(dx2 * dx2 + dy2 * dy2);
+
+              if (dist2 < 100) {
+                ctx.beginPath();
+                ctx.strokeStyle = `rgba(255, 255, 255, ${1 - dist2 / 100})`;
+                if (dist < 150) {
+                  // Highlight connections near mouse
+                  ctx.strokeStyle = `rgba(204, 255, 0, ${1 - dist2 / 100})`;
+                }
+                ctx.moveTo(p.x, p.y);
+                ctx.lineTo(p2.x, p2.y);
+                ctx.stroke();
+              }
+            }
+          }
+
+          requestAnimationFrame(draw);
+        }
+
+        draw();
+      })();
+    </script>
+  </body>
+</html>
