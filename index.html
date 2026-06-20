@@ -1070,6 +1070,7 @@
           role: "Founder, MLE, AI",
           tags: ["ML", "LLM", "CV", "NLP"],
           img: "https://static.tildacdn.com/tild3465-3632-4166-a663-656433346564/10__.JPG",
+          imgPos: "center 35%",
           visionEn: "AI = Gambling",
           visionRu: "ИИ = лудомания",
           achievementsEn: [
@@ -1365,7 +1366,9 @@
                         <div class="absolute inset-0 bg-acid-green mix-blend-multiply opacity-0 group-hover:opacity-100 transition-opacity z-10"></div>
                         <img src="${
                           m.img
-                        }" class="w-full h-full object-cover object-[center_20%] grayscale contrast-125 group-hover:scale-110 transition-transform duration-500">
+                        }" style="object-position: ${
+                          m.imgPos || "center 20%"
+                        }" class="w-full h-full object-cover grayscale contrast-125 group-hover:scale-110 transition-transform duration-500">
                     </div>
 
                     <div class="p-6 bg-void-black group-hover:bg-raw-white group-hover:text-void-black transition-colors">
